@@ -57,16 +57,7 @@ public class EmpolyeeController {
          * 这里就体现了webflux的核心
          *      也即：耗时的业务交给另外的线程来做，这样就不会阻塞处理请求的主线程
          */
-//        Mono<Empolyee> empolyeeMono = Mono.fromFuture(CompletableFuture.supplyAsync(() -> {
-//            try {
-//                Thread.sleep(200);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//            System.out.println("提供数据的线程：" + Thread.currentThread().getName() + random);
-//            return empolyee;
-//        }, threadPoolExecutor));
-        Mono<Empolyee> empolyeeMono = Mono.fromSupplier(() -> {
+        Mono<Empolyee> empolyeeMono = Mono.fromFuture(CompletableFuture.supplyAsync(() -> {
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
@@ -74,7 +65,16 @@ public class EmpolyeeController {
             }
             System.out.println("提供数据的线程：" + Thread.currentThread().getName() + random);
             return empolyee;
-        });
+        }, threadPoolExecutor));
+//        Mono<Empolyee> empolyeeMono = Mono.fromSupplier(() -> {
+//            try {
+//                Thread.sleep(200);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            System.out.println("提供数据的线程：" + Thread.currentThread().getName() + random);
+//            return empolyee;
+//        });
 
         //阻塞直到empolyeeMono里面有数据
         // Empolyee block = empolyeeMono.block();
