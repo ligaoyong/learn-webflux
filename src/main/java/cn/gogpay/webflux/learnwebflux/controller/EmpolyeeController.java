@@ -57,6 +57,13 @@ public class EmpolyeeController {
          * 这里就体现了webflux的核心
          *      也即：耗时的业务交给另外的线程来做，这样就不会阻塞处理请求的主线程
          */
+
+        /**
+         * 使用这种方式 经过测试 同样得10个线程
+         * 使用1个线程来接受请求，其余9个线程来处理耗时操作
+         *  吞吐量能达到2000/分钟
+         *  响应时间：200+ms
+         */
         Mono<Empolyee> empolyeeMono = Mono.fromFuture(CompletableFuture.supplyAsync(() -> {
             try {
                 Thread.sleep(200);
@@ -66,15 +73,27 @@ public class EmpolyeeController {
             System.out.println("提供数据的线程：" + Thread.currentThread().getName() + random);
             return empolyee;
         }, threadPoolExecutor));
+        /**
+         * 使用这种方式(模拟阻塞) 经过测试 同样得10个线程
+         * 10个线程即处理请求，也进行耗时操作
+         *  吞吐量只能达到855/分钟
+         *  响应时间：500+ms
+         */
 //        Mono<Empolyee> empolyeeMono = Mono.fromSupplier(() -> {
 //            try {
-//                Thread.sleep(200);
+//                Thread.sleep(500);
 //            } catch (InterruptedException e) {
 //                e.printStackTrace();
 //            }
 //            System.out.println("提供数据的线程：" + Thread.currentThread().getName() + random);
 //            return empolyee;
 //        });
+
+        /**
+         * 由上述两种方式可知：
+         *      在并发量大、操作耗时等场景下(例如网关)
+         *      在配置正确得情况下：webflux非阻塞有着更强得性能
+         */
 
         //阻塞直到empolyeeMono里面有数据
         // Empolyee block = empolyeeMono.block();

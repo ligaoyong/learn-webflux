@@ -26,7 +26,7 @@ public class NettyServerConfig {
     public ThreadPoolExecutor threadPoolExecutor(){
         CustomizableThreadFactory threadFactory = new CustomizableThreadFactory();
         threadFactory.setThreadNamePrefix("business-pool");
-        return new ThreadPoolExecutor(1,1,
+        return new ThreadPoolExecutor(8,8,
                 0, TimeUnit.MILLISECONDS,
                 new ArrayBlockingQueue<>(10),
                 threadFactory, new ThreadPoolExecutor.DiscardPolicy());
@@ -37,7 +37,7 @@ public class NettyServerConfig {
         NettyReactiveWebServerFactory factory = new NettyReactiveWebServerFactory();
         ReactorResourceFactory reactorResourceFactory = new ReactorResourceFactory();
         //设置业务线程组 只设置一个线程用于测试
-        reactorResourceFactory.setLoopResources(LoopResources.create("my-thread-poll-",1,true));
+        reactorResourceFactory.setLoopResources(LoopResources.create("my-thread-poll-",2,true));
         factory.setResourceFactory(reactorResourceFactory);
         return factory;
     }
