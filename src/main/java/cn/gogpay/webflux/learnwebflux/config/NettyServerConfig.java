@@ -26,9 +26,9 @@ public class NettyServerConfig {
     public ThreadPoolExecutor threadPoolExecutor(){
         CustomizableThreadFactory threadFactory = new CustomizableThreadFactory();
         threadFactory.setThreadNamePrefix("business-pool");
-        return new ThreadPoolExecutor(8,8,
+        return new ThreadPoolExecutor(18,18,
                 0, TimeUnit.MILLISECONDS,
-                new ArrayBlockingQueue<>(10),
+                new ArrayBlockingQueue<>(100),
                 threadFactory, new ThreadPoolExecutor.DiscardPolicy());
     }
 
