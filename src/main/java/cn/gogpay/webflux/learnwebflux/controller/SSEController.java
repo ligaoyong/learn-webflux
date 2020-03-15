@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * 服务端推送（Server Send Event）：
  *  在客户端发起一次请求后会保持该连接，服务器端基于该连接持续向客户端发送数据，从HTML5开始加入。
+ *  (利用了响应头transfer-encoding: chunked？？？)
  */
 @RestController
 @RequestMapping("/api")
